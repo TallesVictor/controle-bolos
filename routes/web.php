@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\BolosController;
+use App\Http\Controllers\EmailsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,7 +14,10 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+#BOLOS
+Route::get('/',[BolosController::class, 'index']);
+Route::resource('bolos', BolosController::class);
+Route::get('emails/form', [EmailsController::class, 'form']);
 
-Route::get('/', function () {
-    return view('home');
-});
+#EMAILS
+Route::resource('emails', EmailsController::class);

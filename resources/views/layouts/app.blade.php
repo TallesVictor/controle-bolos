@@ -5,18 +5,11 @@
 </head>
 
 <body style="background-color: #e9ecef;">
-    <div class="container-fluid bg-white menu">
+    <div class="container-fluid bg-white">
         <div class="p-2 row justify-content-end" style="border-top: 6px solid #0d8efd;">
-            <div class="col-sm-3">
-                <button class="btn btn-outline-primary" type="button" id="btnCadastrar" data-bs-toggle="modal" data-bs-target="#modalCadastrarNoticia">
-                    <i class="fas fa-plus"></i> Cadastrar Notícia</button>
-            </div>
-            <div class="col-sm-3">
-                <div class="input-group">
-                    <input type="text" class="form-control" id="noticias" placeholder="Buscar ">
-                    <button class="btn btn-outline-primary" type="button" id="btnPesquisa" onclick="htmlNoticias()"><i
-                            class="fas fa-search"></i></button>
-                </div>
+            
+            <div class="col text-center">
+                    <h2>Lista de Bolos</h2>
             </div>
         </div>
     </div>

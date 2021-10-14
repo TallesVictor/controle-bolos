@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bolos;
+use App\Models\Emails;
+use Exception;
 use Illuminate\Http\Request;
+
 
 class BolosController extends Controller
 {
@@ -14,7 +17,13 @@ class BolosController extends Controller
      */
     public function index()
     {
-        //
+        $bolos = new Bolos();
+        $bolos = $bolos->index();
+        // if($bolos == null){
+        //     return response('Bolo não econtrado', 404);
+        // }
+        return view('home', ['bolos' => $bolos]);
+        return view('emails.mail', ['bolos' => $bolos]);
     }
 
     /**
@@ -24,7 +33,17 @@ class BolosController extends Controller
      */
     public function create()
     {
-        //
+        $bolos = request()->all();
+        $bolos['peso'] = str_replace('.', '', $bolos['peso']);
+        $bolos['valor'] = str_replace('.', '', $bolos['valor']);
+        $bolos['peso'] = str_replace(',', '.', $bolos['peso']);
+        $bolos['valor'] = str_replace(',', '.', $bolos['valor']);
+        try {
+            Bolos::create($bolos);
+            return Bolos::all();
+        } catch (Exception $ex) {
+            return response(500, 'Não foi possível cadastrar o ' . $bolos['nome'] . $ex->getMessage());
+        }
     }
 
     /**
@@ -44,20 +63,13 @@ class BolosController extends Controller
      * @param  \App\Models\Bolos  $bolos
      * @return \Illuminate\Http\Response
      */
-    public function show(Bolos $bolos)
+    public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Bolos  $bolos
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Bolos $bolos)
-    {
-        //
+        try {
+            return Bolos::find($id);
+        } catch (Exception $ex) {
+            return response(500, 'Não foi possível pesquisar o ' . $id . $ex->getMessage());
+        }
     }
 
     /**
@@ -67,9 +79,26 @@ class BolosController extends Controller
      * @param  \App\Models\Bolos  $bolos
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Bolos $bolos)
+    public function update(Request $request)
     {
-        //
+        // $bolos = $request->input('peso');
+        $bolos= $request->all();
+        $bolos['peso'] = str_replace('.', '', $bolos['peso']);
+        $bolos['valor'] = str_replace('.', '', $bolos['valor']);
+        $bolos['peso'] = str_replace(',', '.', $bolos['peso']);
+        $bolos['valor'] = str_replace(',', '.', $bolos['valor']);
+        $bolo = Bolos::find($bolos['id']);
+        $bolo->nome= $bolos['nome'];
+        $bolo->peso= $bolos['peso'];
+        $bolo->quantidade= $bolos['quantidade'];
+        $bolo->valor= $bolos['valor'];
+
+        try {
+           $bolo->update();
+            return Bolos::all();
+        } catch (Exception $ex) {
+            return response(500, 'Não foi possível cadastrar o ' . $bolos['nome'] . $ex->getMessage());
+        }
     }
 
     /**
@@ -78,8 +107,19 @@ class BolosController extends Controller
      * @param  \App\Models\Bolos  $bolos
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Bolos $bolos)
+    public function destroy($id)
     {
-        //
+        $bolos = Bolos::find($id);
+        if ($bolos) {
+            try {
+                $emails = Emails::where('bolo_id', $id);
+                $emails->delete();
+                $bolos->delete();
+                return Bolos::all();
+            } catch (Exception $ex) {
+                return response(500, 'Não foi possível cadastrar o ' . $bolos['nome'] . $ex->getMessage());
+            }
+        }
+        return response(404, 'Bolo não encontrado');
     }
 }

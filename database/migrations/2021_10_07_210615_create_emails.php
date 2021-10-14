@@ -15,7 +15,7 @@ class CreateEmails extends Migration
     {
         Schema::create('emails', function (Blueprint $table) {
             $table->id();
-            $table->string('nome');
+            $table->string('nome')->null();
             $table->string('email');
             $table->unsignedBigInteger('bolo_id');
             $table->foreign('bolo_id')->references('id')->on('bolos');

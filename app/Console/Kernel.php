@@ -2,6 +2,9 @@
 
 namespace App\Console;
 
+use App\Jobs\EmailsNotification;
+use App\Models\Bolos;
+use App\Models\Emails;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -24,7 +27,17 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        
+         $schedule->call(function () {
+
+            $bolos = new Bolos();
+            $bolos = $bolos->emailsBolos();
+            foreach ($bolos as $bolo) {
+                $email = Emails::find($bolo->email_id);
+                EmailsNotification::dispatch($email)->delay(now()->addSeconds(5));
+            }
+
+            })->everyFiveMinutes();
     }
 
     /**
