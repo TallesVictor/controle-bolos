@@ -30,7 +30,7 @@ div {
         <div class="p-2 row justify-content-end" style="border-top: 6px solid #0d8efd;">
             
             <div class="col text-center">
-                    <h2>Seu bolo está disponpivel!!</h2>
+                    <h2>Seu bolo está disonível!!</h2>
             </div>
         </div>
     </div>
